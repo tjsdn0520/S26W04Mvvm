@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kr.ac.kumoh.ce.s20241071.s26w04mvvm.ui.theme.S26W04MvvmTheme
 
 class MainActivity : ComponentActivity() {
@@ -48,16 +49,18 @@ class MainActivity : ComponentActivity() {
 fun MainScreen(
     viewModel: CounterViewModel
 ) {
-    //var count by retain { mutableIntStateOf(0) }
+    // 유튜버: StateFlow
+    // 구독자: collectAsStateWithLifecycle()
+    // 실시간으로 받아낸 최신 상태 객체: counterState
+    val counterState by viewModel.counter.collectAsStateWithLifecycle()
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Counter(
             modifier = Modifier.padding(innerPadding),
-            count = viewModel.counter.count,
+            count = counterState.count,
             onIncrement = { viewModel.incrementCount() },
             onDecrement = { viewModel.decrementCount() },
-            onReset = { viewModel.resetCount() }
+            onReset = { viewModel.resetCount() },
         )
     }
 }
-
